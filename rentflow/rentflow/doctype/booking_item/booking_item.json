@@ -1,0 +1,94 @@
+{
+ "actions": [],
+ "allow_bulk_edit": 1,
+ "allow_rename": 1,
+ "creation": "2026-09-22 16:24:04.987773",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "items_section",
+  "column_break_rucq",
+  "equipment_unit",
+  "category",
+  "daily_rate",
+  "line_amount",
+  "checkout_condition_grade",
+  "checkin_condition_grade",
+  "damage_fee"
+ ],
+ "fields": [
+  {
+   "fieldname": "items_section",
+   "fieldtype": "Section Break",
+   "label": "Items"
+  },
+  {
+   "fieldname": "equipment_unit",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Equipment Unit",
+   "options": "Equipment Unit",
+   "reqd": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "column_break_rucq",
+   "fieldtype": "Column Break",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "equipment_unit.category",
+   "fieldname": "category",
+   "fieldtype": "Link",
+   "label": "Category",
+   "options": "Equipment Category"
+  },
+  {
+   "fieldname": "line_amount",
+   "fieldtype": "Currency",
+   "label": "Line Amount"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "checkout_condition_grade",
+   "fieldtype": "Select",
+   "label": "Checkout Condition Grade",
+   "options": "same options as Equipment Unit"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "checkin_condition_grade",
+   "fieldtype": "Select",
+   "label": "Checkin Condition Grade",
+   "options": "same options"
+  },
+  {
+   "fieldname": "damage_fee",
+   "fieldtype": "Currency",
+   "label": "Damage Fee",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "category.daily_rate",
+   "fieldname": "daily_rate",
+   "fieldtype": "Data",
+   "label": "Daily Rate",
+   "options": "Equipment Category"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-09-22 18:12:15.206044",
+ "modified_by": "Administrator",
+ "module": "RentFlow",
+ "name": "Booking Item",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}
