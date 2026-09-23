@@ -2,6 +2,7 @@
  "actions": [],
  "allow_bulk_edit": 1,
  "allow_rename": 1,
+ "autoname": "field:category_name",
  "creation": "2026-09-22 15:28:26.509238",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -24,7 +25,8 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Category Name",
-   "reqd": 1
+   "reqd": 1,
+   "unique": 1
   },
   {
    "fieldname": "description",
@@ -47,10 +49,11 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-09-22 19:10:02.819523",
+ "modified": "2026-09-22 21:37:43.963642",
  "modified_by": "Administrator",
  "module": "RentFlow",
  "name": "Equipment Category",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {
