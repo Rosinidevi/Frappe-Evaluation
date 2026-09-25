@@ -258,9 +258,25 @@ app_license = "mit"
 
 fixtures = [
     {"dt": "Role","filters":[["name", "in",["RF Front Desk","RF Inspector","RF Manager" ]]]},
-    {"dt": "Custom DocPerm","filters":[["role", "in",["RF Front Desk","RF Inspector","RF Manager"]]]}
+    {"dt": "Custom DocPerm","filters":[["role", "in",["RF Front Desk","RF Inspector","RF Manager"]]]},
+    "Client Script"
 ]
 
 permission_query_conditions = {
     "Rental Booking": "rentflow.permissions.rental_booking_query"
+}
+
+after_install = "rentflow.install.after_install"
+
+doc_events = {
+    "*": {
+        "on_update": "rentflow.audit.log_change",
+        "on_submit": "rentflow.audit.log_change",
+        "on_cancel": "rentflow.audit.log_change"
+    }
+}
+scheduler_events = {
+    "daily": [
+        "rentflow.jobs.flag_overdue_returns"
+    ]
 }

@@ -1,0 +1,35 @@
+[
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Rental Booking",
+  "enabled": 1,
+  "modified": "2026-09-23 22:17:10.263161",
+  "module": "RentFlow",
+  "name": "Rental Booking",
+  "script": "frappe.ui.form.on(\"Rental Booking\", {\n    setup(frm) {\n        frm.set_query(\"equipment_unit\", \"items\", function () {\n            return {\n                filters: {\n                    current_status: \"Available\"\n                }\n            };\n        });\n    },\n\n    refresh(frm) {\n        frm.dashboard.add_indicator(\n            frm.doc.status || \"No Status\",\n            \"blue\"\n        );\n       \n    },\n\n    start_date(frm) {\n        check_days(frm);\n        calculate_amount(frm);\n    },\n\n    end_date(frm) {\n        check_days(frm);\n        calculate_amount(frm);\n    }\n});\n\nfunction check_days(frm) {\n    if (!frm.doc.start_date || !frm.doc.end_date) {\n        return;\n    }\n    let start = frappe.datetime.str_to_obj(frm.doc.start_date);\n    let end = frappe.datetime.str_to_obj(frm.doc.end_date);\n    let days =Math.floor((end - start) / (1000 * 60 * 60 * 24)) + 1;\n    if (days > 30) {\n        frappe.show_alert({\n            message: \"Rental period is more than 30 days\",\n            indicator: \"orange\"\n        });\n    }\n}\n\nfunction calculate_amount(frm) {\n    if (!frm.doc.start_date || !frm.doc.end_date) {\n        return;\n    }\n    let start = frappe.datetime.str_to_obj(frm.doc.start_date);\n    let end = frappe.datetime.str_to_obj(frm.doc.end_date);\n    let days =Math.floor((end - start) / (1000 * 60 * 60 * 24)) + 1;\n\n    (frm.doc.items || []).forEach(row => {\n        let amount = (row.daily_rate || 0) * days;\n        frappe.model.set_value(row.doctype,row.name,\"line_days\",days);\n\n        frappe.model.set_value(row.doctype,row.name,\"line_amount\",amount);\n    });\n}",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Rental Booking",
+  "enabled": 1,
+  "modified": "2026-09-23 22:52:03.120774",
+  "module": null,
+  "name": "Rental Booking2",
+  "script": "frappe.ui.form.on(\"Rental Booking\", {\n    refresh(frm) {\n        if (frm.doc.status === \"Checked Out\") {\n            frm.add_custom_button(\"Log Return\", function () {\n                show_return_dialog(frm);\n            });\n        }\n        if (!frm.is_new()) {\n            frm.add_custom_button(\"Transfer Handler\", function () {\n                transfer_handler(frm);\n            });\n        }\n    }\n});\nfunction show_return_dialog(frm) {\n    if (!frm.doc.items || !frm.doc.items.length) {\n        frappe.msgprint(\"No rental items found.\");\n        return;\n    }\n    let fields = [];\n    frm.doc.items.forEach((row, index) => {\n        fields.push({fieldname: \"condition_\" + index,fieldtype: \"Select\",label: row.equipment_unit + \" Check-in Condition\",options: \"New\\nGood\\nFair\\nPoor\\nDamaged\",\n            default: row.checkin_condition_grade || \"New\",reqd: 1\n        });\n    });\n    fields.push({fieldname: \"notes\",fieldtype: \"Small Text\",label: \"Notes\"\n    });\n    let dialog = new frappe.ui.Dialog({\n        title: \"Log Return\",\n        fields: fields,\n        primary_action_label: \"Submit\",\n        primary_action(values) {\n            let rank = {\"New\": 0,\"Good\": 1,\"Fair\": 2,\"Poor\": 3,\"Damaged\": 4};\n            let grade_dropped = false;\n            frm.doc.items.forEach((row, index) => {\n                let checkout_grade =row.checkout_condition_grade;\n                let checkin_grade =\n                    values[\"condition_\" + index];\n                if (checkout_grade && checkin_grade && rank[checkin_grade] > rank[checkout_grade]) {\n                    grade_dropped = true;\n                }\n            });\n            if (grade_dropped && !values.notes) {\n                frappe.msgprint(\"Notes are mandatory when the condition grade drops.\");\n                return;\n            }\n            frm.doc.items.forEach((row, index) => {\n                frappe.model.set_value(row.doctype,row.name,\"checkin_condition_grade\",values[\"condition_\" + index]);\n            });\n            frm.set_value(\"status\", \"Returned\");\n            frm.save().then(() => {\n                dialog.hide();\n                frappe.show_alert({message: \"Return recorded successfully\",indicator: \"green\"\n                });\n                frm.trigger(\"start_date\");\n            });\n        }\n    });\n    dialog.show();\n}\nfunction transfer_handler(frm) {\n    frappe.prompt(\n        [\n            {\n                fieldname: \"new_handler\",\n                fieldtype: \"Link\",\n                label: \"New Handler\",\n                options: \"Yard Staff\",\n                reqd: 1\n            }\n        ],\n        function(values) {\n            frappe.confirm(\n                \"Transfer this booking to \" +\n                values.new_handler +\n                \"?\",\n                function() {\n                    frappe.call({\n                        method: \"rentflow.api.transfer_handler\",\n                        args: {\n                            booking_name: frm.doc.name,\n                            handled_by: values.new_handler\n                        },\n                        callback: function(r) {\n                            if (!r.exc) {\n                                frappe.show_alert({\n                                    message: \"Handler transferred successfully\",indicator: \"green\"\n                                });\n\n                                frm.reload_doc();\n                            }\n                        }\n                    });\n                }\n            );\n        },\n        \"Transfer Handler\",\n        \"Transfer\"\n    );\n}",
+  "view": "Form"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Client Script",
+  "dt": "Rental Booking",
+  "enabled": 1,
+  "modified": "2026-09-24 16:03:19.276117",
+  "module": "RentFlow",
+  "name": "Security",
+  "script": "frappe.ui.form.on(\"Rental Booking\", {\n    refresh(frm) {\n        if (frappe.user_roles.includes(\"RF Manager\")) {\n            frm.set_df_property(\n                \"customer_phone\",\n                \"hidden\",\n                0\n            );\n        } else {\n            frm.set_df_property(\n                \"customer_phone\",\n                \"hidden\",\n                1\n            );\n        }\n    }\n});",
+  "view": "Form"
+ }
+]

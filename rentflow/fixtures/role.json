@@ -1,1 +1,41 @@
-[]
+[
+ {
+  "desk_access": 1,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Role",
+  "home_page": null,
+  "is_custom": 0,
+  "modified": "2026-09-22 19:05:15.766425",
+  "name": "RF Front Desk",
+  "restrict_to_domain": null,
+  "role_name": "RF Front Desk",
+  "two_factor_auth": 0
+ },
+ {
+  "desk_access": 1,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Role",
+  "home_page": null,
+  "is_custom": 0,
+  "modified": "2026-09-22 19:05:30.474374",
+  "name": "RF Inspector",
+  "restrict_to_domain": null,
+  "role_name": "RF Inspector",
+  "two_factor_auth": 0
+ },
+ {
+  "desk_access": 1,
+  "disabled": 0,
+  "docstatus": 0,
+  "doctype": "Role",
+  "home_page": null,
+  "is_custom": 0,
+  "modified": "2026-09-22 19:05:40.981006",
+  "name": "RF Manager",
+  "restrict_to_domain": null,
+  "role_name": "RF Manager",
+  "two_factor_auth": 0
+ }
+]

@@ -4,8 +4,8 @@ from frappe.model.naming import make_autoname
 
 class EquipmentUnit(Document):
     def autoname(self):
-        if not self.category:
-            frappe.throw("Category is required")
+        # if not self.category:
+        #     frappe.throw("Category is required")
         category_name = frappe.db.get_value(
             "Equipment Category",
             self.category,

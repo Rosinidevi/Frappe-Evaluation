@@ -12,7 +12,8 @@
   "default_deposit_percent",
   "damage_fee_per_grade_drop",
   "late_fee_per_day",
-  "low_availability_alert_enabled"
+  "low_availability_alert_enabled",
+  "webhook_url"
  ],
  "fields": [
   {
@@ -58,13 +59,19 @@
    "fieldname": "low_availability_alert_enabled",
    "fieldtype": "Check",
    "label": "Low Availability Alert Enabled"
+  },
+  {
+   "fieldname": "webhook_url",
+   "fieldtype": "Data",
+   "label": "Webhook Url",
+   "options": "URL"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2026-09-22 16:01:48.330945",
+ "modified": "2026-09-25 16:41:16.873204",
  "modified_by": "Administrator",
  "module": "RentFlow",
  "name": "RentFlow Settings",
